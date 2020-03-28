@@ -15,10 +15,10 @@ def sequentialize(copies, filter_dup_dests=False, allow_fan_out=True):
         # If there're multiple assignments to the same var, keep only the latest
         copies = list(dict(copies).items())
 
-    available = []
+    ready = []
     to_do = []
     pred = {}
-    resource = {}
+    loc = {}
     res = []
 
     def emit_copy(a, b):
@@ -26,10 +26,10 @@ def sequentialize(copies, filter_dup_dests=False, allow_fan_out=True):
         res.append((b, a))
 
     for b, a in copies:
-        resource[b] = None
+        loc[b] = None
 
     for b, a in copies:
-        resource[a] = a
+        loc[a] = a
         pred[b] = a
 
         # Extra check
@@ -40,22 +40,22 @@ def sequentialize(copies, filter_dup_dests=False, allow_fan_out=True):
         to_do.append(b)
 
     for b, a in copies:
-        if resource[b] is None:
-            available.append(b)
+        if loc[b] is None:
+            ready.append(b)
 
-    log.debug("resource: %s", resource)
+    log.debug("loc: %s", loc)
     log.debug("pred: %s", pred)
-    log.debug("available: %s", available)
+    log.debug("ready: %s", ready)
     log.debug("to_do: %s", to_do)
 
     while to_do:
-        while available:
-            b = available.pop()
+        while ready:
+            b = ready.pop()
             log.debug("* avail %s", b)
             if b not in pred:
                 continue
             a = pred[b]
-            c = resource[a]
+            c = loc[a]
             emit_copy(c, b)
 
             # Addition by Paul Sokolovsky to handle fan-out case (when same
@@ -63,9 +63,9 @@ def sequentialize(copies, filter_dup_dests=False, allow_fan_out=True):
             if allow_fan_out and c in to_do:
                 to_do.remove(c)
 
-            resource[a] = b
+            loc[a] = b
             if a == c:
-                available.append(a)
+                ready.append(a)
 
         # Addition to handle fan-out.
         if allow_fan_out and not to_do:
@@ -73,9 +73,9 @@ def sequentialize(copies, filter_dup_dests=False, allow_fan_out=True):
 
         b = to_do.pop()
         log.debug("* to_do %s", b)
-        if b != resource[pred[b]]:
+        if b != loc[pred[b]]:
             emit_copy(b, "tmp")
-            resource[b] = "tmp"
-            available.append(b)
+            loc[b] = "tmp"
+            ready.append(b)
 
     return res

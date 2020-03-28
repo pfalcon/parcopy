@@ -94,4 +94,22 @@ handling is configurable, and implementation can be easily "scaled down"
 to handle only simpler forms, if more generals forms don't appear in
 your application).
 
+References
+----------
+1. The Parallel Assignment Problem Redefined. Cathy May. IEEE Transactions
+   on Software Engineering. Vol. 15, No. 6, June 1989
+2. Revisiting Out-of-SSA Translation for Correctness, Code Quality, and
+   Efficiency. Benoit Boissinot, Alain Darte, Fabrice Rastello, Benoit
+   Dupont de Dinechin, and Christophe Guillon. LIP Research Report RR2008-40.
+   2008
+3. Towards an SSA based compiler back-end: some interesting properties of
+   SSA and its extensions. Benoit Boisinot. PhD Thesis. 30 September 2010
+4. [Static Single Assignment Book](http://ssabook.gforge.inria.fr/latest/book-full.pdf).
+   Lots of authors. 8 June 2018
+
+[2] contains a typo in the sequentilization algorithm, faithfully copied
+to [4]. [3] from the same author however doesn't have it.
+
+
+
 (c) Copyright 2020 Paul Sokolovsky, released under the terms of MIT license.

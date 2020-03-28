@@ -54,16 +54,17 @@ def sequentialize(copies, filter_dup_dests=False, allow_fan_out=True):
             log.debug("* avail %s", b)
             if b not in pred:
                 continue
-            a = resource[pred[b]]
-            emit_copy(a, b)
+            a = pred[b]
+            c = resource[a]
+            emit_copy(c, b)
 
             # Addition by Paul Sokolovsky to handle fan-out case (when same
             # source is assigned to multiple destinations).
-            if allow_fan_out and a in to_do:
-                to_do.remove(a)
+            if allow_fan_out and c in to_do:
+                to_do.remove(c)
 
-            resource[pred[b]] = b
-            if pred[b] == a:
+            resource[a] = b
+            if a == c:
                 available.append(a)
 
         # Addition to handle fan-out.

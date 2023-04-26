@@ -60,8 +60,8 @@ def sequentialize(copies, filter_dup_dests=False, allow_fan_out=True):
 
             # Addition by Paul Sokolovsky to handle fan-out case (when same
             # source is assigned to multiple destinations).
-            if allow_fan_out and c in to_do:
-                to_do.remove(c)
+            if allow_fan_out and b in to_do:
+                to_do.remove(b)
 
             loc[a] = b
             if a == c:
